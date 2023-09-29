@@ -7,7 +7,7 @@ const checkToken = async (req, res, next) => {
 
     if(!token) return res.status(401).json({mensagem: 'Acesso Negado'})
 
-    const secret = process.env.secret
+    const secret = 'secret'
     
     jwt.verify(token, secret)
 
