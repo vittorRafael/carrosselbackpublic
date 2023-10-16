@@ -1,5 +1,8 @@
 const Carrossel = require('../models/Carrossel')
 const fs = require('fs')
+const {bucket, getStorage, getDownloadURL} = require('../firebase')
+
+
 
 const listCarrossel = async (req,res) => {
   try {
@@ -43,6 +46,10 @@ const newImage = async (req, res) => {
 
     const file = req.file
     if(!file) return res.status(400).json({mensagem: 'Selecione uma imagem.'})
+    
+    await bucket.upload(file.path)
+    const fileRef = getStorage().bucket(bucket.name).file(file.filename);
+    const downloadURL= await getDownloadURL(fileRef);
 
     const carrossel = await Carrossel.findOne({ _id: id });
     if(!carrossel) return res.status(404).json({mensagem: 'Item não encontrado!'})
@@ -50,7 +57,7 @@ const newImage = async (req, res) => {
 
 
     carrossel.imgs.push({
-      src: file.path,
+      src: downloadURL,
       desc,
     })
 

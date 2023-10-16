@@ -13,15 +13,17 @@ router.get('/', async (req, res) => {
 
 router.post('/user', UserController.newUser)
 router.post('/login', UserController.loginUser)
-router.delete('/user/:id', checkToken, UserController.deleteUser)
-router.get('/user', checkToken, UserController.listUsers)
 
-router.get('/carrossel', checkToken, CarrosselController.listCarrossel)
-router.post('/carrossel', checkToken, CarrosselController.newCarrossel);
-router.post('/carrossel/:id/addImage', checkToken, uploadImage.single('file') ,CarrosselController.newImage);
-router.delete('/carrossel/:id', checkToken, CarrosselController.deleteCarrossel)
-router.delete('/carrossel/:id/:indexImage', checkToken, CarrosselController.deleteImage)
-router.patch('/carrossel/:id', checkToken, CarrosselController.editCarrossel)
+router.use(checkToken)
+router.delete('/user/:id', UserController.deleteUser)
+router.get('/user', UserController.listUsers)
+
+router.get('/carrossel', CarrosselController.listCarrossel)
+router.post('/carrossel', CarrosselController.newCarrossel);
+router.post('/carrossel/:id/addImage', uploadImage.single('file'), CarrosselController.newImage);
+router.delete('/carrossel/:id', CarrosselController.deleteCarrossel)
+router.delete('/carrossel/:id/:indexImage', CarrosselController.deleteImage)
+router.patch('/carrossel/:id', CarrosselController.editCarrossel)
 
 
 module.exports = router
